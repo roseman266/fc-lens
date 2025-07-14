@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta property="fc:miniapp" content="true" />
+  <title>FC Lens</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #eee;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    input {
+      width: 300px;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      background: #11ffee22;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .loader {
+      margin-top: 2rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0.5; transform: scale(0.95); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 FC Lens</h1>
+  <p>Analyze any ETH or SOL contract address</p>
+  <input type="text" id="ca" placeholder="Enter Contract Address" />
+  <br/>
+  <button onclick="analyze()">Analyze</button>
+  <div id="result" class="loader">🔄 Waiting for input...</div>
+  <footer style="margin-top: 2rem; font-size: 0.8rem;">Created by Otehzy</footer>
+
+  <script>
+    function analyze() {
+      const ca = document.getElementById('ca').value.trim();
+      document.getElementById('result').textContent = 'Fetching data...';
+
+      if (!ca) {
+        document.getElementById('result').textContent = '❌ Enter a contract address.';
+        return;
+      }
+
+      fetch(`https://api.geckoterminal.com/api/v2/search?query=${ca}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.data.length === 0) {
+            document.getElementById('result').textContent = '⚠️ No token info found.';
+          } else {
+            const t = data.data[0].attributes;
+            document.getElementById('result').innerHTML = `
+              ✅ Token: ${t.name} (${t.symbol})<br/>
+              💰 Price: $${parseFloat(t.price_usd).toFixed(4)}<br/>
+              🔁 Liquidity: $${t.liquidity_usd}<br/>
+              📊 FDV: $${t.fdv}<br/>
+              📎 CA: ${ca}
+            `;
+          }
+        })
+        .catch(() => {
+          document.getElementById('result').textContent = '⚠️ Error fetching data.';
+        });
+    }
+  </script>
+</body>
+</html>
