@@ -1,0 +1,12 @@
+{
+  "name": "FC Lens",
+  "description": "Analyze ETH and SOL contract addresses directly from Farcaster.",
+  "miniapp_version": "1.0.0",
+  "account_association": "optional",
+  "icon_url": "https://fc-lens.vercel.app/icon.png",
+  "home_url": "https://fc-lens.vercel.app",
+  "developer": {
+    "name": "Otehzy",
+    "url": "https://warpcast.com/otehzy"
+  }
+}
